@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="作成課題2.html">
+  </head>
+  <body>
+    <form>
+       <p>メールアドレス:<input type="text" pattern="^[a-zA-Z0-9]+$" title="半角英数字のみ入力してください"></p>
+       
+       <p>パスワード:<input type="text" pattern="^[a-zA-Z0-9]+$" title="半角英数字のみ入力してください"></p>
+       <button type="button" onclick="location.href='作成課題3.html'">ログイン</button>
+       <button type="button" onclick="location.href='作成課題2.html'">新規登録</button>
+    </form>
+    <script>
+        function login() {
+          const mail = document.getElementById('mailadress').value;
+          const pass = document.getElementById('password').value;
+          if (!mail || !pass) {
+            alert('メールアドレスとパスワードの登録が必須です');
+            return;
+          }
+        }
+
+     
+    $('#login-form').on('submit', function(e) {
+      e.preventDefault();
+
+      const mail = $('#mailadress').val();
+      const pass = $('#password').val();
+
+      
+      if (!mail || !pass) {
+        $('#login-message').text('メールアドレスとパスワードの入力が必須です');
+        return;
+      }
+
+      
+      $.ajax({
+        url: '/api/login', 
+        type: 'POST',
+        data: { mailadress: mail, password: pass },
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+           
+            $('#login-message').text('ログイン成功！リダイレクトします...');
+            setTimeout(function() {
+              window.location.href = 'sakusei-kadai3.html';
+            }, 1000);
+          } else {
+            
+            $('#login-message').text(response.message || 'ログイン失敗');
+          }
+        },
+        error: function() {
+          $('#login-message').text('通信エラーが発生しました');
+        }
+      });
+    });
+  </script>
+
+        </script>
+
+
+  </body>
+  
+
+</html>

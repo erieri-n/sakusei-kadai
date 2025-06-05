@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link href="" rel="stylesheet">
+</head>
+<body>
+    <form id="searchForm">
+        
+      <h3>学年</h3>
+      <h3>名前</h3>
+      <p><button type="button" onclick="location.href='sakusei-kadai6.html'">詳細表示</button> </p> 
+
+        
+        <label>
+          学生名：
+          <input type="text" id="studentName" name="studentName" placeholder="学生名を入力">
+        </label>
+        <label>
+          学年：
+          <select id="studentGrade" name="studentGrade">
+            
+            <option value="1">1年生</option>
+            <option value="2">2年生</option>
+            <option value="3">3年生</option>
+          </select>
+        </label>
+        <button type="submit">検索</button>
+
+        
+        <p>
+            <button type="button" onclick="location.href='sakusei-kadai3.html'">戻る</button>
+          </p>
+          
+      </form>
+      <script>
+
+document.getElementById('searchForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('studentName').value.trim();
+      const grade = document.getElementById('studentGrade').value;
+
+     
+      try {
+        const res = await fetch('/api/search_students', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, grade: grade })
+        });
+        const data = await res.json();
+        renderResult(data.students || []);
+      } catch (err) {
+        document.getElementById('searchResult').innerHTML = '<p style="color:red;">通信エラーが発生しました</p>';
+      }
+    });
+    function renderResult(students) {
+      if (!students.length) {
+        document.getElementById('searchResult').innerHTML = '<p>該当する学生がいません</p>';
+        return;
+      }
+      let html = '<table border="1"><tr><th>名前</th><th>学年</th><th>詳細</th></tr>';
+      students.forEach(student => {
+        html += `<tr>
+          <td>${student.name}</td>
+          <td>${student.grade}年生</td>
+          <td><button type="button" onclick="showDetail('${student.name}')">詳細表示</button></td>
+        </tr>`;
+      });
+      html += '</table>';
+      document.getElementById('searchResult').innerHTML = html;
+    }
+
+
+        function showDetail(name) {
+          alert(name + "さんの詳細を表示します。");
+          
+        }
+
+        document.getElementById('textbox').addEventListener('input', function(e) {
+  this.value = this.value.replace(/[^\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF]/g, '');
+});
+
+        </script>
+</body>
+</html>        

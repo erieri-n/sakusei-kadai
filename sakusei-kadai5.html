@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="">
+    <h2>登録フォーム</h2>
+  </head>
+  <body>
+    <form>
+        <p>名前<input type="text" name="name"></p>
+        <p>住所<input type="text" name="name"></p>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <label for="face">顔写真をアップロード：</label>
+            <input type="file" id="face" name="face" accept="image/*" required>
+          </form>
+    </form>
+    
+     <button type="button" onclick="location.href='sakusei-kadai3.html'">登録</button>
+    
+     <script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const face = document.getElementById('face').files[0];
+      const resultMessage = document.getElementById('resultMessage');
+
+     
+      if (!name || !address || !face) {
+        resultMessage.style.color = "red";
+        resultMessage.textContent = '名前、住所、顔写真の登録が必須です';
+        return;
+      }
+
+      
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('address', address);
+      formData.append('face', face);
+
+      try {
+        const res = await fetch('upload.php', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          resultMessage.style.color = "green";
+          resultMessage.textContent = '登録が完了しました！';
+          
+        } else {
+          resultMessage.style.color = "red";
+          resultMessage.textContent = data.message || '登録に失敗しました';
+        }
+      } catch (err) {
+        resultMessage.style.color = "red";
+        resultMessage.textContent = '通信エラーが発生しました';
+      }
+    });
+      
+
+        </script>
+
+  </body>
+
+  
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="sakusei-kadai.html">
+  </head>
+  <body>
+    <form>
+       <p>ユーザー名:<input type="text" pattern="^[a-zA-Z0-9\uFF01-\uFF5E\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]+$" inputmode="text" style="ime-mode:auto;" title="半角英数字または全角文字のみ入力してください">
+       </p>
+       <p>メールアドレス:<input type="text" pattern="^[a-zA-Z0-9]+$" title="半角英数字のみ入力してください"></p>
+       <p>パスワード:<input type="text" pattern="^[a-zA-Z0-9]+$" title="半角英数字のみ入力してください"></p>
+       <p>パスワード（確認用）:<input type="text" pattern="^[a-zA-Z0-9]+$" title="半角英数字のみ入力してください"></p>
+       <span id="error-message" style="color:red;"></span>
+       <button type="button" onclick="location.href='作成課題.html'">登録</button>
+       <p>
+        <button type="button" onclick="location.href='作成課題.html'">戻る</button>
+      </p>
+       
+    </form>
+    <script>
+        function login() {
+        const name = document.getElementById('name').value;
+          const mail = document.getElementById('mailadress').value;
+          const pass = document.getElementById('password').value;
+          if (!mail || !pass) {
+            alert('ユーザー名、メールアドレス、パスワードの登録が必須です');
+            return;
+          }
+         
+        }
+
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+     
+      const username = document.getElementById('username').value.trim();
+      const mail = document.getElementById('mailaddress').value.trim();
+      const pass = document.getElementById('password').value;
+      const pass2 = document.getElementById('password_confirm').value;
+      const errorMsg = document.getElementById('error-message');
+      errorMsg.textContent = '';
+
+      
+      if (!username || !mail || !pass || !pass2) {
+        errorMsg.textContent = '全ての項目を入力してください';
+        return;
+      }
+      if (pass !== pass2) {
+        errorMsg.textContent = 'パスワードが一致しません';
+        return;
+      }
+
+    
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username,
+            mailaddress: mail,
+            password: pass
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          errorMsg.style.color = 'green';
+          errorMsg.textContent = '登録に成功しました！ログイン画面に移動します。';
+          setTimeout(() => {
+            window.location.href = '作成課題.html';
+          }, 1500);
+        } else {
+          errorMsg.style.color = 'red';
+          errorMsg.textContent = data.message || '登録に失敗しました';
+        }
+      } catch (err) {
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = '通信エラーが発生しました';
+      }
+    });
+        </script>
+
+
+  </body>
+  
+
+</html>

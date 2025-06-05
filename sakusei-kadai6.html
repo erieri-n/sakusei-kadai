@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <form>
+        <h3>学年</h3>
+        <h3>名前</h3>
+        <h3>住所</h3>
+        <h3>顔写真</h3>
+        <h3>コメント</h3>
+
+        <p><button type="button" onclick="location.href='sakusei-kadai9.html'">学生編集</button> </p> 
+
+
+        <h3>学年時</h3>
+        <h3>学期</h3>
+        <h3>国語</h3>
+        <h3>数学</h3>
+        <h3>理科</h3>
+        <h3>社会</h3>
+        <h3>音楽</h3>
+        <h3>家庭科</h3>
+        <h3>英語</h3>
+        <h3>美術</h3>
+        <h3>保健体育</h3>
+
+        <p><button type="button" onclick="location.href='sakusei-kadai8.html'">成績表示</button> </p> 
+        <p><button type="button" onclick="location.href='sakusei-kadai7.html'">成績登録</button> </p> 
+        <p><button type="button" onclick="location.href='sakusei-kadai4.html'">戻る</button> </p> 
+       
+
+        <script>
+         
+          document.getElementById('editBtn').addEventListener('click', async function() {
+            const form = document.getElementById('studentForm');
+            const formData = new FormData(form);
+            const msg = document.getElementById('studentMsg');
+            msg.textContent = '';
+            try {
+              const res = await fetch('/api/update_student', {
+                method: 'POST',
+                body: formData
+              });
+              const data = await res.json();
+              if (data.success) {
+                msg.style.color = "green";
+                msg.textContent = '学生情報を更新しました！';
+              } else {
+                msg.style.color = "red";
+                msg.textContent = data.message || '更新に失敗しました';
+              }
+            } catch (err) {
+              msg.style.color = "red";
+              msg.textContent = '通信エラーが発生しました';
+            }
+          });
+          document.getElementById('scoreBtn').addEventListener('click', async function() {
+      const form = document.getElementById('scoreForm');
+      const formData = new FormData(form);
+      const msg = document.getElementById('scoreMsg');
+      msg.textContent = '';
+      try {
+        const res = await fetch('/api/register_score', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          msg.style.color = "green";
+          msg.textContent = '成績を登録しました！';
+        } else {
+          msg.style.color = "red";
+          msg.textContent = data.message || '登録に失敗しました';
+        }
+      } catch (err) {
+        msg.style.color = "red";
+        msg.textContent = '通信エラーが発生しました';
+      }
+    });
+    </script>
+
+  </body>
+  
+
+</html>

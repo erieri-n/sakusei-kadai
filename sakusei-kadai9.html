@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <form>
+      <h3>学生id</h3>
+      <div><label for="glade">学年：</label>
+        <select id="glade" name="glade">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+</div>
+      <p>名前:<input type="text"></p>
+      <p>住所:<input type="textarea" size="50"></p>
+      <form action="upload.php" method="post" enctype="multipart/form-data">
+        <label for="face">顔写真をアップロード：</label>
+        <input type="file" id="face" name="face" accept="image/*" required>
+      </form>
+      
+      <label for="message">コメント</label><br>
+<textarea id="message" style="width:400px; height:60px;"></textarea>
+
+
+      <p><button type="button">編集</button> </p> 
+      <p><button type="button" onclick="location.href='sakusei-kadai6.html'">戻る</button> </p> 
+
+      <form>
+        <label for="grade">学年（必須）</label>
+        <input type="text" id="grade" name="grade" required>
+      
+        <label for="name">名前（必須）</label>
+        <input type="text" id="name" name="name" required>
+      
+        <label for="address">住所（必須）</label>
+        <input type="text" id="address" name="address" required>
+      
+        <label for="photo">顔写真（必須）</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+      
+        <input type="submit" value="送信">
+      </form>
+      
+    </form>
+    <script>
+   
+const pattern = /^[A-Za-z0-9ａ-ｚＡ-Ｚ０-９ぁ-んァ-ヶ一-龠々ーｦ-ﾟ、。！？「」（）｢｣､｡ﾞﾟ\s]+$/;
+
+function validateInput(input) {
+  return pattern.test(input);
+}
+
+document.getElementById('editBtn').addEventListener('click', async function() {
+      const form = document.getElementById('editStudentForm');
+      const formData = new FormData(form);
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = '';
+      resultDiv.className = 'result-message';
+
+     
+      const name = form.name.value.trim();
+      const address = form.address.value.trim();
+      if (!validateInput(name) || !validateInput(address)) {
+        resultDiv.textContent = '名前や住所に使用できない文字が含まれています。';
+        resultDiv.className = 'error-message';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/edit_student', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          resultDiv.textContent = '学生情報が編集されました！';
+          resultDiv.className = 'result-message';
+        } else {
+          resultDiv.textContent = data.message || '編集に失敗しました';
+          resultDiv.className = 'error-message';
+        }
+      } catch (err) {
+        resultDiv.textContent = '通信エラーが発生しました';
+        resultDiv.className = 'error-message';
+      }
+    });
+       
+        </script>
+
+
+  </body>
+  
+
+</html>

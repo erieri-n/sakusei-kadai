@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>作成課題</title>
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <form>
+       
+        <div><label for="glade">学年：</label>
+            <select id="glade" name="glade">
+            
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+ 
+    <div><label for="glade">学期：</label>
+        <select id="glade" name="glade">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+    </select>
+</div>
+
+
+
+       <div><label for="japanese">国語：</label>
+        <select id="japanese" name="japanese">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="math">数学：</label>
+        <select id="math" name="math">
+         
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="science">理科：</label>
+        <select id="science" name="science">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+
+        <div><label for="social">社会：</label>
+        <select id="social" name="social">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="music">音楽：</label>
+        <select id="music" name="music">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div>
+        <label for="homeeconomics">家庭科：</label>
+        <select id="homeeconomics" name="homeeconomics">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="english">英語：</label>
+        <select id="english" name="english">
+        
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="art">美術：</label>
+        <select id="art" name="art">
+          
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>
+        <div><label for="pe">保健体育：</label>
+        <select id="pe" name="pe">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        </select>
+    </div>      
+
+
+        <p><button type="button">編集</button> </p> 
+        <p><button type="button" onclick="location.href='sakusei-kadai6.html'">戻る</button> </p> 
+    </form>
+    <script>
+
+document.getElementById('editBtn').addEventListener('click', async function() {
+        const form = document.getElementById('editScoreForm');
+        const formData = new FormData(form);
+        const resultDiv = document.getElementById('result');
+        resultDiv.textContent = '';
+        resultDiv.className = 'result-message';
+
+        try {
+          const res = await fetch('/api/edit_score', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          if (data.success) {
+            resultDiv.textContent = '成績が編集されました！';
+            resultDiv.className = 'result-message';
+          } else {
+            resultDiv.textContent = data.message || '編集に失敗しました';
+            resultDiv.className = 'error-message';
+          }
+        } catch (err) {
+          resultDiv.textContent = '通信エラーが発生しました';
+          resultDiv.className = 'error-message';
+        }
+      });
+
+        
+        </script>
+
+
+  </body>
+  
+
+</html>
